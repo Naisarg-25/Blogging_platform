@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const SECRET = "secretkey";
+const SECRET = process.env.JWT_SECRET;
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("database connected"))

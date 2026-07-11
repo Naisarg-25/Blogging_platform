@@ -1,4 +1,4 @@
-const api = "http://localhost:3000";
+const api = "https://blogging-platform-cvvn.onrender.com";
 let token = localStorage.getItem("token");
 
 const authSection = document.getElementById("authSection");
