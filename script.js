@@ -12,6 +12,15 @@ const loginPass = document.getElementById("loginPass");
 const title = document.getElementById("title");
 const content = document.getElementById("content");
 
+function escapeHTML(value) {
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function getusername(){
     if(!token) return null;
     try {
@@ -32,7 +41,7 @@ function showAuthenticatedUI(){
         loadpost();
         scrollToBlog();
     } else {
-        authSection.style.display = "block";
+        authSection.style.display = "grid";
         blogSection.style.display = "none";
         welcome.textContent = "";
         document.getElementById("posts").innerHTML = "";
@@ -52,16 +61,30 @@ function loadpost(){
         .then(res => {
             const postdiv = document.getElementById("posts");
             postdiv.innerHTML = "";
+
+            if (!res.data.length) {
+                postdiv.innerHTML = '<div class="empty-state">No posts yet. Be the first one to share something amazing.</div>';
+                return;
+            }
+
+            const currentUser = getusername();
             res.data.forEach(p => {
-                postdiv.innerHTML += `
-                <div class="post">
-                    <h3>${p.title}</h3>
-                    <p>${p.content}</p>
-                    <small> By ${p.author} on ${new Date(p.date).toLocaleString()}</small>
-                    ${p.author === getusername() ? `
-                        <button onclick="editpost('${p._id}', '${p.title.replace(/'/g, "\\'")}')">Edit</button>
-                        <button onclick="deletepost('${p._id}')">Delete</button>` : ""}
-                </div>`;
+                const postCard = document.createElement("article");
+                postCard.className = "post";
+                postCard.innerHTML = `
+                    <h3>${escapeHTML(p.title)}</h3>
+                    <p>${escapeHTML(p.content)}</p>
+                    <div class="post-meta">
+                        <span>By ${escapeHTML(p.author)}</span>
+                        <span>${new Date(p.date).toLocaleString()}</span>
+                    </div>
+                    ${p.author === currentUser ? `
+                        <div class="post-actions">
+                            <button onclick="editpost('${p._id}', '${escapeHTML(p.title).replace(/'/g, "\\'")}')">Edit</button>
+                            <button class="ghost-btn" onclick="deletepost('${p._id}')">Delete</button>
+                        </div>` : ""}
+                `;
+                postdiv.appendChild(postCard);
             });
         })
         .catch(err => console.error("Failed to load posts", err));
@@ -127,4 +150,4 @@ function logout(){
     showAuthenticatedUI();
 }
 
-showAuthenticatedUI(); 
+showAuthenticatedUI();

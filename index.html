@@ -3,46 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blogging_Platform</title>
+    <title>Blogging Platform</title>
     <style>
-        body { font-family: Arial; margin:20px; }
-        form { margin:10px 0; }
-        .post { border:1px solid #ccc; padding:10px; margin:10px 0; }
+        :root {
+            --bg: #f4f7ff;
+            --card: rgba(255, 255, 255, 0.9);
+            --text: #111827;
+            --muted: #6b7280;
+            --accent: #6366f1;
+            --accent-soft: #eef2ff;
+            --border: #e5e7eb;
+            --shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 25%),
+                linear-gradient(135deg, #f8fbff 0%, #eef2ff 100%);
+            padding: 24px;
+        }
+
+        .app-shell {
+            width: min(1100px, 100%);
+            margin: 0 auto;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            margin: 0 0 8px;
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        h1, h2, h3, p {
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .hero-badge {
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .auth-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .panel h2, .panel h3 {
+            margin-bottom: 8px;
+        }
+
+        .panel p {
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        .form-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input, textarea, button, select {
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            outline: 2px solid rgba(99, 102, 241, 0.16);
+            border-color: var(--accent);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--accent), #818cf8);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.16);
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .ghost-btn {
+            background: white;
+            color: var(--text);
+            border: 1px solid var(--border);
+            box-shadow: none;
+        }
+
+        .blog-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .blog-toolbar p {
+            margin-top: 6px;
+            color: var(--muted);
+        }
+
+        .post-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-heading span {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .posts-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .post {
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #fbfcff 100%);
+        }
+
+        .post h3 {
+            margin-bottom: 8px;
+        }
+
+        .post p {
+            color: var(--text);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .post-actions button {
+            padding: 8px 10px;
+            font-size: 0.88rem;
+            box-shadow: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--muted);
+            padding: 20px;
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+            background: #fcfdff;
+        }
+
+        @media (max-width: 768px) {
+            .hero, .blog-toolbar, .section-heading {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .auth-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Blogging Platform</h1>
+    <div class="app-shell">
+        <header class="hero">
+            <div>
+                
+                <h1>Blogging Platform</h1>
+                <p class="subtitle">Share your ideas with a beautifully simple experience.</p>
+            </div>
+            
+        </header>
 
-    <div id="authSection">
-        <h2>Sign UP</h2>
-        <form id="signupForm">
-            <input type="text" id="signupName" placeholder="Name" required>
-            <input type="email" id="signupEmail" placeholder="Email" required>
-            <input type="password" id="signupPass" placeholder="Password" required>
-            <button type="submit">Signup</button>
-        </form>
+        <div id="authSection" class="auth-grid">
+            <section class="panel">
+                <h2>Register</h2>
+                <p>Create your account and start sharing.</p>
+                <form id="signupForm" class="form-card">
+                    <input type="text" id="signupName" placeholder="Name" required>
+                    <input type="email" id="signupEmail" placeholder="Email" required>
+                    <input type="password" id="signupPass" placeholder="Password" required>
+                    <button type="submit">Sign up</button>
+                </form>
+            </section>
 
-        <h2>Login</h2>
-        <form id="loginForm">
-            <input type="email" id="loginEmail" placeholder="Email" required>
-            <input type="password" id="loginPass" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-    </div>
+            <section class="panel">
+                <h2>Login</h2>
+                <p>Log in to continue writing your next story.</p>
+                <form id="loginForm" class="form-card">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPass" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+            </section>
+        </div>
 
-    <div id="blogSection" style="display:none;">
-        <button id="logoutBtn" onclick="logout()">Logout</button>
-        <h2 id="welcome"></h2>
+        <div id="blogSection" style="display:none;">
+            <div class="blog-toolbar">
+                <div>
+                    <h2 id="welcome"></h2>
+                    
+                </div>
+                <button id="logoutBtn" class="ghost-btn" onclick="logout()">Logout</button>
+            </div>
 
-        <h2>New Post</h2>
-        <form id="postForm">
-            <input type="text" id="title" placeholder="Title" required>
-            <textarea id="content" placeholder="Content" required></textarea>
-            <button type="submit">Add Post</button>
-        </form>
+            <section class="panel" style="margin-bottom: 20px;">
+                <h3>New Post</h3>
+                <p>Share something fresh with your readers.</p>
+                <form id="postForm" class="post-form">
+                    <input type="text" id="title" placeholder="Title" required>
+                    <textarea id="content" placeholder="Write your post..." required></textarea>
+                    <button type="submit">Publish Post</button>
+                </form>
+            </section>
 
-        <h2>All Posts</h2>
-        <div id="posts"></div>
+            <section class="panel">
+                <div class="section-heading">
+                    <h3>All Posts</h3>
+                    <span>Recent updates</span>
+                </div>
+                <div id="posts" class="posts-grid"></div>
+            </section>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
